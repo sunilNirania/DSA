@@ -1,0 +1,40 @@
+/* Tree node structure
+
+struct Node
+{
+    int data;
+    struct Node* left;
+    struct Node* right;
+
+    Node(int x){
+        data = x;
+        left = right = NULL;
+    }
+};*/
+
+Node* solve(int in[],int post[],int n,int &postIndex,int inStart,int inEnd,map<int,int> &hash){
+    
+    if(postIndex < 0 || inStart > inEnd)
+        return NULL;
+        
+    int element = post[postIndex--];
+    Node* root = new Node(element);
+    int position = hash[element];
+    
+    root -> right = solve(in,post,n,postIndex,position+1,inEnd,hash);
+    root -> left = solve(in,post,n,postIndex,inStart,position-1,hash);
+    
+    return root;
+    
+}
+Node *buildTree(int in[], int post[], int n) {
+    
+    map<int,int> hash;
+    for(int i=0; i<n; i++)
+        hash[in[i]] = i;
+        
+    int postOrderIndex = n-1;
+    Node* ans = solve(in,post,n,postOrderIndex,0,n-1,hash);
+    return ans;
+    
+}
