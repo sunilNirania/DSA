@@ -1,0 +1,51 @@
+/*Complete the code here.
+Node is as follows:
+struct Node
+{
+  int data;
+  Node* left;
+  Node* right;
+};
+*/
+class Solution{
+    public:
+    Node* solve(int in[],int pre[],int n,int &index,int inStart,int inEnd,map<int,vector<int>> &hash){
+        
+        if(index >= n || inStart > inEnd)
+            return NULL;
+            
+        int element = pre[index++];
+        Node* root = new Node(element);
+        
+        int position;
+        if(hash[element][0] == INT_MIN){
+            
+            position = hash[element][1];
+            hash[element][1] = INT_MIN;
+            
+        }
+        else{
+            
+            position = hash[element][0];
+            hash[element][0] = INT_MIN;
+            
+        }
+        
+        root->left = solve(in,pre,n,index,inStart,position-1,hash);
+        root->right = solve(in,pre,n,index,position+1,inEnd,hash);
+        
+        return root;
+        
+    }
+    Node* buildTree(int in[],int pre[], int n)
+    {   
+       map<int,vector<int>> hash;
+      
+       for(int i=0; i<n; i++)
+        hash[in[i]].push_back(i);
+      
+       int preIndex = 0;
+       Node* ans = solve(in,pre,n,preIndex,0,n-1,hash);
+       return ans;
+    }
+};
