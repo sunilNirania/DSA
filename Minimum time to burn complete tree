@@ -1,0 +1,108 @@
+/*
+struct Node {
+    int data;
+    Node *left;
+    Node *right;
+
+    Node(int val) {
+        data = val;
+        left = right = NULL;
+    }
+};
+*/
+class Solution {
+  public:
+    
+    Node* parentMapping(Node* root,int target,map<Node*,Node*> &parentToNode){
+        
+        Node* targetNode = NULL;
+        queue<Node*> q;
+        q.push(root);
+        
+        while(!q.empty()){
+            
+            Node* front = q.front();
+            q.pop();
+            
+            if(front->data == target)
+                targetNode = front;
+            
+            if(front->left){
+                
+                parentToNode[front->left] = front;
+                q.push(front->left);
+                
+            }
+            
+            if(front->right){
+                
+                parentToNode[front->right] = front;
+                q.push(front->right);
+                
+            }
+            
+        }
+        
+        return targetNode;
+        
+    }
+    
+    int burnTree(Node* root,map<Node*,Node*> &parentToNode){
+        
+        int time = 0;
+        map<Node*,bool> burned;
+        burned[root] = true;
+        queue<Node*> q;
+        q.push(root);
+        
+        while(!q.empty()){
+            
+            bool flag = false;
+            int size = q.size();
+            for(int i=0; i<size; i++){
+                
+                Node* front = q.front();
+                q.pop();
+                if(front->left && !burned[front->left]){
+                    
+                    flag = true;
+                    q.push(front->left);
+                    burned[front->left] = true;
+                    
+                }
+                
+                if(front->right && !burned[front->right]){
+                    
+                    flag = true;
+                    q.push(front->right);
+                    burned[front->right] = true;
+                    
+                }
+                
+                if(parentToNode[front] && !burned[parentToNode[front]]){
+                    
+                    flag = true;
+                    q.push(parentToNode[front]);
+                    burned[parentToNode[front]] = true;
+                    
+                }
+                
+            }
+            
+            if(flag == true)
+                time++;
+            
+        }
+        
+        return time;
+        
+    }
+    int minTime(Node* root, int target) 
+    {
+        map<Node*,Node*> parentToNode;
+        Node* targetNode = parentMapping(root,target,parentToNode);
+        
+        int ans = burnTree(targetNode,parentToNode);
+        return ans;
+    }
+};
