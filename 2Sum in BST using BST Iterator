@@ -1,0 +1,87 @@
+class BSTAscendingIterator{
+
+    stack<BinaryTreeNode<int>*> myStack;
+public:
+    BSTAscendingIterator(BinaryTreeNode<int> *root){
+
+        pushAll(root);
+
+    }
+    
+    bool hasNext(){
+
+        return !myStack.empty();
+
+    }
+    
+    int next(){
+
+        BinaryTreeNode<int>* temp = myStack.top();
+        myStack.pop();
+        pushAll(temp->right);
+        return temp->data;
+
+    }
+private:
+    void pushAll(BinaryTreeNode<int>* root){
+
+        for(; root!=NULL; myStack.push(root),root = root->left);
+        
+    }
+
+};
+
+class BSTDescendingIterator{
+
+    stack<BinaryTreeNode<int>*> myStack;
+public:
+    BSTDescendingIterator(BinaryTreeNode<int> *root){
+
+        pushAll(root);
+
+    }
+    
+    bool hasBefore(){
+
+        return !myStack.empty();
+
+    }
+    
+    int before(){
+
+        BinaryTreeNode<int>* temp = myStack.top();
+        myStack.pop();
+        pushAll(temp->left);
+        return temp->data;
+
+    }
+private:
+    void pushAll(BinaryTreeNode<int>* root){
+
+        for(; root!=NULL; myStack.push(root),root = root->right);
+        
+    }
+
+};
+bool twoSumInBST(BinaryTreeNode<int>* root, int target) {
+	
+    BSTAscendingIterator *i = new BSTAscendingIterator(root);
+    BSTDescendingIterator *j = new BSTDescendingIterator(root);
+
+    int a = i->next();
+    int b = j->before();
+    while(a!=b){
+       
+        int sum = a+b;
+        if(sum == target)
+            return true;
+        else if(sum > target)
+            b = j->before();
+        else
+            a = i->next();
+        
+    }
+
+    return false;
+    
+}
