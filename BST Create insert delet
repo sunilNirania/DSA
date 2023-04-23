@@ -1,0 +1,139 @@
+class TreeNode{
+
+public:
+	int data;
+	TreeNode *left;
+	TreeNode *right;
+
+	TreeNode(int data){
+
+		this -> data = data;
+		this -> left = NULL;
+		this -> right = NULL;
+
+	}
+
+};
+
+
+TreeNode* treeInsertion(TreeNode* root,int d){
+
+	if(!root){
+
+		TreeNode* temp = new TreeNode(d);
+
+		return temp;
+	}
+
+	if(d > root->data)
+		root->right =  treeInsertion(root->right,d);
+	else
+		root->left =  treeInsertion(root->left,d);
+
+	return root;
+}
+
+int smallestInBST(TreeNode* root){
+
+	TreeNode* temp = root;
+	while(!temp -> left){
+
+		temp = temp -> left;
+
+	}
+
+	return temp -> data;
+
+}
+TreeNode* nodeDeletion(TreeNode* root,int target){
+
+	if(!root)
+		return root;
+	if(root->data == target){
+
+
+		if(!root->right && !root->left){
+
+			delete root;
+			return NULL;
+
+		}
+
+		if(root->right && !root->left){
+
+			TreeNode* temp = root->right;
+			delete root;
+			return temp;
+
+		}
+
+		if(!root->right && root->left){
+
+			TreeNode* temp = root->left;
+			delete root;
+			return temp;
+
+		}
+
+		if(root->right && root->left){
+
+			int mini = smallestInBST(root->right);
+			root->data = mini;
+			root->right = nodeDeletion(root->right,mini);
+			return root;
+
+		}
+
+	}
+
+	
+	if(root->data > target)
+		root->left = nodeDeletion(root->left,target);
+	else
+		root->right = nodeDeletion(root->right,target);
+
+}
+void takeInput(TreeNode* &root){
+
+	int data;
+	cin>>data;
+
+	while(data != -1){
+
+		root = treeInsertion(root,data);
+		cin>>data;
+
+	}
+
+}
+int main(){
+#ifndef ONLINE_JUDGE
+	freopen("input.txt","r",stdin);
+	freopen("output.txt","w",stdout);
+#endif
+
+	TreeNode* root = NULL;
+	takeInput(root);
+
+	queue<TreeNode*> q;
+	q.push(root);
+
+	nodeDeletion(root,20);
+	while(!q.empty()){
+
+		int size = q.size();
+		for(int i=0; i<size; i++){
+
+			TreeNode* temp = q.front();
+			q.pop();
+			cout<<temp->data<<" ";
+
+			if(temp->left)
+				q.push(temp->left);
+			if(temp->right)
+				q.push(temp->right);
+
+		}
+		cout<<endl;
+	}
+}
