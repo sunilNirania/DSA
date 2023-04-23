@@ -1,0 +1,23 @@
+BinaryTreeNode<int>* makeBST(vector<int> &preorder,int mini,int maxi,int &index){
+
+    if(index >= preorder.size())
+        return NULL;
+    
+    if(preorder[index] > mini && preorder[index] < maxi){
+
+        BinaryTreeNode<int>* root = new BinaryTreeNode<int>(preorder[index++]);
+        root->left = makeBST(preorder,mini,root->data,index);
+        root->right = makeBST(preorder,root->data,maxi,index);
+        return root;
+
+    }
+    
+    return NULL;
+
+}
+BinaryTreeNode<int>* preorderToBST(vector<int> &preorder) {
+    
+    int index = 0;
+    return makeBST(preorder,INT_MIN,INT_MAX,index);   
+    
+}
