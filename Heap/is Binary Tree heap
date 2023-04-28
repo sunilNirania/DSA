@@ -1,0 +1,53 @@
+class Solution {
+  public:
+    pair<int,bool> isMaxHeap(struct Node* root){
+        
+        if(!root)
+            return {0,true};
+        
+        pair<int,bool> left = isMaxHeap(root->left);
+        pair<int,bool> right = isMaxHeap(root->right);
+        
+        if(left.second && right.second){
+            
+            if(root->data > left.first && root->data > right.first)
+                return {root->data,true};
+            
+            return {root->data,false};
+            
+        }
+        
+        return {root->data,false};
+        
+    }
+    
+    int countNode(struct Node* root){
+        
+        if(!root)
+            return 0;
+            
+        return (1 + countNode(root->left) + countNode(root->right));
+        
+    }
+    bool isCBT(struct Node* tree,int i,int nodeCount){
+        
+        if(!tree)
+            return true;
+        
+        if(i>=nodeCount)
+            return false;
+            
+        int left = 2*i+1;
+        int right = 2*i+2;
+        
+        return isCBT(tree->left,left,nodeCount) && isCBT(tree->right,right,nodeCount);
+        
+    }
+    bool isHeap(struct Node* tree) {
+        pair<int,bool> ans = isMaxHeap(tree);
+        bool condition1 = ans.second;
+        bool condition2 = isCBT(tree,0,countNode(tree));
+        
+        return (condition1 && condition2);
+    }
+};
