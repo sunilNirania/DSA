@@ -1,0 +1,73 @@
+#include<bits/stdc++.h>
+
+class node{
+
+public:
+    int i;
+    int j;
+    int data;
+
+    node(int data,int i,int j){
+
+        this->data = data;
+        this->i = i;
+        this->j = j;
+
+    }
+};
+
+class compare{
+
+public:
+    bool operator()(node* a,node* b){
+
+        return a->data > b->data;
+
+    }
+
+};
+int kSorted(vector<vector<int>> &a, int k, int n) {
+   
+   int maxi = INT_MIN;
+   int mini = INT_MAX;
+   int ans = INT_MAX;
+   priority_queue<node*,vector<node*>,compare> minHeap;
+   
+   for(int i=0; i<k; i++){
+
+       maxi = max(a[i][0],maxi);
+       node* temp = new node(a[i][0],i,0);
+       minHeap.push(temp);
+
+   }
+   
+   while(!minHeap.empty()){
+
+       node* temp = minHeap.top();
+       int i = temp->i;
+       int j = temp->j;
+
+       minHeap.pop();
+       mini = temp->data;
+
+       ans = min(ans,maxi-mini+1);
+
+       if(j+1 < n){
+
+           node* newNode = new node(a[i][j+1],i,j+1);
+           minHeap.push(newNode);
+           maxi = max(maxi,newNode->data); 
+
+       }
+        else{
+
+            break;
+
+        }
+
+   }
+
+   return ans;
+   
+   
+}
