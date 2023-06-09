@@ -1,0 +1,86 @@
+//{ Driver Code Starts
+//Initial Template for C++
+
+#include<bits/stdc++.h>
+using namespace std;
+
+// } Driver Code Ends
+//User function Template for C++
+
+class Solution {
+  public:   
+  
+    void dfs(int node,vector<int>& time,vector<int>& low,vector<int> &visited,vector<int>& ans,int &timer,int parent,vector<int>adjList[], vector<int> &ap){
+        
+        time[node] = low[node] = timer++;
+        visited[node] = 1;
+        int child = 0;
+        
+        for(auto neighbour : adjList[node]){
+            
+            if(neighbour == parent)
+                continue;
+                
+            if(visited[neighbour] == 0){
+                
+
+                    dfs(neighbour,time,low,visited,ans,timer,node,adjList,ap);
+                    low[node] = min(low[node],low[neighbour]);
+                    
+                    if(low[neighbour] >= time[node] && parent != -1){
+                        
+                        ap[node] = 1;
+                        
+                    }
+                    child++;
+                
+            }
+            else{
+                
+                low[node] = min(low[node],time[neighbour]);
+               
+                
+            }
+        
+            
+        }
+        
+        if(parent == -1 && child > 1)
+            ap[node] = 1;
+        
+    }
+    vector<int> articulationPoints(int V, vector<int>adj[]) {
+       
+       
+        
+        int parent = -1;
+        vector<int> time(V);
+        vector<int> low(V);
+        vector<int> visited(V);
+        vector<int> ans;
+        int timer = 1;
+        vector<int> ap(V);
+        
+        for(int i=0; i<V; i++){
+            
+            if(!visited[i])
+                dfs(i,time,low,visited,ans,timer,parent,adj,ap);
+            
+        }
+        
+        
+        for(int i=0; i<V; i++){
+            
+            if(ap[i] == 1)
+                ans.push_back(i);
+            
+        }
+        
+        if(ans.size() == 0)
+            return {-1};
+            
+        return ans;
+       
+    }
+};
+
