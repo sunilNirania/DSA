@@ -1,0 +1,73 @@
+#include<bits/stdc++.h>
+
+void dfs(int node,vector<int>& visited,stack<int>& stk,unordered_map<int,list<int>>& adjList){
+
+	visited[node] = 1;
+
+	for(auto nbr : adjList[node])
+		if(!visited[nbr])
+			dfs(nbr,visited,stk,adjList);
+
+	stk.push(node);
+
+}
+
+void newDfs(int node,vector<int>& visited,unordered_map<int,list<int>>& adjList){
+
+	visited[node] = 1;
+
+	for(auto nbr : adjList[node])
+		if(!visited[nbr])
+			newDfs(nbr,visited,adjList);
+
+}
+int stronglyConnectedComponents(int v, vector<vector<int>> &edges)
+{
+	unordered_map<int,list<int>> adjList;
+	for(int i=0; i<edges.size(); i++){
+
+		int u = edges[i][0];
+		int v = edges[i][1];
+
+		adjList[u].push_back(v);
+
+	}
+
+	vector<int> visited(v,0);
+	stack<int> stk;
+
+	for(int i=0; i<v; i++){
+
+		if(!visited[i])
+			dfs(i,visited,stk,adjList);
+
+	}
+
+	unordered_map<int,list<int>> transpose;
+
+	for(int i=0; i<edges.size(); i++){
+
+		int u = edges[i][0];
+		int v = edges[i][1];
+
+		transpose[v].push_back(u);
+
+	}
+
+	fill(visited.begin(),visited.end(),0);
+	int ans = 0;
+	while(!stk.empty()){
+
+		int node = stk.top();
+		stk.pop();
+
+			if (!visited[node]) {
+
+				ans++;
+				newDfs(node, visited, transpose);
+				
+			}
+        }
+
+		return ans;
+}
