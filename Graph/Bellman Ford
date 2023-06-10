@@ -1,0 +1,31 @@
+  vector<int> bellman_ford(int V, vector<vector<int>>& edges, int S) {
+        
+        vector<int> distance(V,1e8);
+        
+        
+        distance[S] = 0;
+        
+        for(int i=0; i<V; i++){          // we have to traverse V-1 times but for checking negative cycles we are iterating Vth time
+                                         // in worst case it can take V-1 edges for goind from source node to last node that's why we iterate V-1 times
+            for(auto edge : edges){
+                
+                int u = edge[0];
+                int v = edge[1];
+                int w = edge[2];
+                
+                if(distance[u] + (long long)w < distance[v]){
+                    
+                    if(i == V-1)
+                        return {-1};
+                    
+                    distance[v] = distance[u] + w;
+                    
+                }
+                
+            }
+            
+        }
+        
+        return distance;
+        
+    }
