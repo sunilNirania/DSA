@@ -1,0 +1,51 @@
+class Solution {
+private:
+    bool dfs(int node,vector<int>& visited,vector<int>& dfsCall,unordered_map<int,list<int>>& adjList,stack<int>& stk){
+
+        visited[node] = 1;
+        dfsCall[node] = 1;
+
+        for(auto nbr : adjList[node]){
+
+            if(visited[nbr] == 0){
+                if(dfs(nbr,visited,dfsCall,adjList,stk))
+                    return true;}
+            else if(dfsCall[nbr] == 1)
+                return true;
+
+        }
+
+        dfsCall[node] = 0;
+        stk.push(node);
+        return false;
+
+    }
+public:
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        unordered_map<int,list<int>> adjList;
+        for(auto i:prerequisites)
+            adjList[i[1]].push_back(i[0]);
+
+        vector<int> dfsCall(numCourses);
+        vector<int> visited(numCourses);
+        stack<int> stk;
+
+        for(int i=0; i<numCourses; i++){
+            
+            if(visited[i] == 0)
+                if(dfs(i,visited,dfsCall,adjList,stk))
+                    return {};
+
+        }
+
+        vector<int> ans;
+        while(!stk.empty()){
+
+            ans.push_back(stk.top());
+            stk.pop();
+
+        }
+        return ans;
+
+    }
+};
