@@ -31,3 +31,6 @@ vector<int> topoSort(int V, vector<int> adj[])
 	    
 	    return ans;
 	}
+
+// if you want to detect cycle in directed graph using BFS?
+// you can do it using kahn's algorithem. just count the numbers of elements it printing or showing in topo sort if they are not equal to the total number of vertices that mean there exists a cycle
