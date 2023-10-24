@@ -1,2 +1,2 @@
-# Coding
-DSA
+# DSA
+Data Structures and Algorithem
